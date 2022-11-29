@@ -1,12 +1,21 @@
 package org.launchcode.techjobs.persistent.models;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Employer extends AbstractEntity {
+
+    @OneToMany//(mappedBy = "Employer")
+    @JoinColumn(name= "employer_id")
+    private List<Job> jobs= new ArrayList<>();//Job
+
 
     @NotNull
     @Size(max=100)
