@@ -2,6 +2,7 @@ package org.launchcode.techjobs.persistent.controllers;
 
 import org.launchcode.techjobs.persistent.models.Employer;
 import org.launchcode.techjobs.persistent.models.Skill;
+import org.launchcode.techjobs.persistent.models.data.JobRepository;
 import org.launchcode.techjobs.persistent.models.data.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,8 @@ import java.util.Optional;
 public class SkillController {
     @Autowired
     private SkillRepository skillRepository;
+    @Autowired
+    private JobRepository jobRepository;
 
     @GetMapping("")
     public String index(Model model){
@@ -41,16 +44,16 @@ public class SkillController {
                                          Errors errors, Model model) {
 
         if (errors.hasErrors()) {
+            model.addAttribute("title", "Add Skill");
             return "skills/add";
         }
+        Optional<Skill> optSkill = skillRepository.findById(newSkill.getId());
+        Skill skill = (Skill) optSkill.get();
+        newSkill.setDescription(skill.description);//setSkill(skill);
         skillRepository.save(newSkill);
         return "redirect:";
     }
 
-    //#4 displayViewSkill will be in charge of rendering a page to view the contents of an individual skill object.
-    // It will make use of that skill object’s id field to grab the correct information from skillRepository.
-    // optSkill is currently initialized to null.
-    // Replace this using the .findById() method with the right argument to look for the given skill object from the data layer.
     @GetMapping("view/{skillId}")
     public String displayViewSkill(Model model, @PathVariable int skillId) {
 /*Original*/
@@ -62,6 +65,7 @@ public class SkillController {
 //        } else {
 //            return "redirect:../";
 //        }
+
         if (skillId >= 0 ) {
 
             model.addAttribute("skill", skillRepository.findById(skillId));
@@ -69,6 +73,7 @@ public class SkillController {
         } else {
             return "redirect:../";
         }
+
     }
 
 }

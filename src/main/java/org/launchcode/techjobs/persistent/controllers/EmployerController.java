@@ -3,6 +3,7 @@ package org.launchcode.techjobs.persistent.controllers;
 
 import org.launchcode.techjobs.persistent.models.Employer;
 import org.launchcode.techjobs.persistent.models.data.EmployerRepository;
+import org.launchcode.techjobs.persistent.models.data.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +18,8 @@ import java.util.Optional;
 public class EmployerController {
     @Autowired
     private EmployerRepository employerRepository;
-
+    @Autowired
+    private SkillRepository skillRepository;
     @GetMapping("")
     public String index(Model model){
         model.addAttribute("title", "Employers");
@@ -46,10 +48,6 @@ public class EmployerController {
         return "redirect:";
     }
 
-    //#4 displayViewEmployer will be in charge of rendering a page to view the contents of an individual employer object.
-    // It will make use of that employer object’s id field to grab the correct information from employerRepository.
-    // optEmployer is currently initialized to null.
-    // Replace this using the .findById() method with the right argument to look for the given employer object from the data layer.
     @GetMapping("view/{employerId}")
     public String displayViewEmployer(Model model, @PathVariable int employerId) {
 /*Original*/
