@@ -52,9 +52,9 @@ public class HomeController {
             model.addAttribute("title", "Add Job");
             return "add";
         }
-        Optional<Employer> optEmployer = employerRepository.findById(employerId);
-        if (optEmployer.isPresent()) {
-            Employer employer = (Employer) optEmployer.get();
+        Optional<Employer> result = employerRepository.findById(employerId);
+        if (result.isPresent()) {
+            Employer employer = result.get();
             newJob.setEmployer(employer);
         }
 
