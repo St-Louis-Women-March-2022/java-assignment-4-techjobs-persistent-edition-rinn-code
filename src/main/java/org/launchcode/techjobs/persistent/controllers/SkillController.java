@@ -18,8 +18,8 @@ import java.util.Optional;
 public class SkillController {
     @Autowired
     private SkillRepository skillRepository;
-    @Autowired
-    private JobRepository jobRepository;
+//    @Autowired
+//    private JobRepository jobRepository;
 
     @GetMapping("")
     public String index(Model model){
@@ -38,21 +38,18 @@ public class SkillController {
         model.addAttribute(new Skill());
         return "skills/add";
     }
-
     @PostMapping("add")
     public String processAddSkillForm(@ModelAttribute @Valid Skill newSkill,
-                                         Errors errors, Model model) {
+                                      Errors errors, Model model) {
 
         if (errors.hasErrors()) {
-            model.addAttribute("title", "Add Skill");
             return "skills/add";
         }
-        Optional<Skill> optSkill = skillRepository.findById(newSkill.getId());
-        Skill skill = (Skill) optSkill.get();
-        newSkill.setDescription(skill.description);//setSkill(skill);
+
         skillRepository.save(newSkill);
         return "redirect:";
     }
+
 
     @GetMapping("view/{skillId}")
     public String displayViewSkill(Model model, @PathVariable int skillId) {
