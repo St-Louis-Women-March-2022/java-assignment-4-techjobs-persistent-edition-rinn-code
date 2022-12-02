@@ -18,16 +18,11 @@ import java.util.Optional;
 public class EmployerController {
     @Autowired
     private EmployerRepository employerRepository;
-    @Autowired
-    private SkillRepository skillRepository;
+
     @GetMapping("")
     public String index(Model model){
         model.addAttribute("title", "Employers");
         model.addAttribute("employers", employerRepository.findAll());
-//        for (Employer employer : employerRepository.findAll()){
-//            System.out.println(employer.getId());
-//        }
-//        model.addAttribute("employers", employerRepository.findAll());
         return "employers/index";
     }
 

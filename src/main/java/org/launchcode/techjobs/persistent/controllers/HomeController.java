@@ -37,9 +37,9 @@ public class HomeController {
     @GetMapping("add")
     public String displayAddJobForm(Model model) {
         model.addAttribute("title", "Add Job");
-        model.addAttribute(new Job());
         model.addAttribute("employers", employerRepository.findAll());
         model.addAttribute("skills", skillRepository.findAll());
+        model.addAttribute(new Job());
         return "add";
     }
  //   select the employer object affiliated with the new job.
@@ -47,23 +47,30 @@ public class HomeController {
 
     @PostMapping("add")
     public String processAddJobForm(@ModelAttribute @Valid Job newJob,
-                                       Errors errors, Model model, @RequestParam int employerId, @RequestParam List<Integer> skills) {
-        if (errors.hasErrors()) {
+                                       Errors errors, Model model, @RequestParam int employerId, @RequestParam(required=false) List<Integer> skills) {
+        if (errors.hasErrors() || skills == null) {
             model.addAttribute("title", "Add Job");
+            model.addAttribute("employers", employerRepository.findAll());
+            model.addAttribute("skills", skillRepository.findAll());
             return "add";
+        } else {
+            List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
+            model.addAttribute("skills", skillObjs);
+            newJob.setSkills(skillObjs);
+
+
+            Optional<Employer> result = employerRepository.findById(employerId);
+            if (result.isPresent()) {
+                Employer employer = result.get();
+                model.addAttribute("employers", employer);
+                newJob.setEmployer(employer);
+            }
+
+
+            jobRepository.save(newJob);
+            model.addAttribute("job", newJob);
+            return "redirect:";
         }
-        Optional<Employer> result = employerRepository.findById(employerId);
-        if (result.isPresent()) {
-            Employer employer = result.get();
-            newJob.setEmployer(employer);
-        }
-
-        List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
-        newJob.setSkills(skillObjs);
-
-        jobRepository.save(newJob);
-        return "redirect:";
-
     }
 
     @GetMapping("view/{jobId}")
